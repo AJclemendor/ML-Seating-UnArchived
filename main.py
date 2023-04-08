@@ -12,6 +12,10 @@ from RetriveSheetInfo import RetrieveSheetInfo
 from SeatStudents import SeatStudents
 
 def main():
+
+    ROWS = int(input("Enter Rows"))
+    COLS = int(input("Enter Cols"))
+
     # Instantiate classes // get data
     retriever = RetrieveSheetInfo()
     student_data = retriever.student_data
@@ -23,15 +27,25 @@ def main():
     X, y = seater.preprocess_data()
 
     # train the compatibility model using the preprocessed data
-    seater.train_personalized_compatibility_models(epochs=100, batch_size=32)
+    seater.train_personalized_compatibility_models(epochs=5, batch_size=32)
 
     # Optimize the seating arrangement using the trained compatibility model
-    best_seating_arrangement = seater.optimize_seating_arrangement(iterations=1000, num_trials=10)
+    best_seating_arrangement = seater.optimize_seating_arrangement(iterations=10, num_trials=10)
 
-    # Print the best seating arrangement -> TODO Change this imp in a visual update
+
+    # Print the best seating arrangement as a tic-tac-toe grid
     print("Best seating arrangement:")
-    for student in best_seating_arrangement:
-        print(student)
+    num_rows = ROWS
+    num_cols = COLS
+    for i in range(num_rows):
+        for j in range(num_cols):
+            student_index = i * num_cols + j
+            if student_index < len(best_seating_arrangement):
+                student = best_seating_arrangement[student_index]
+                print(student.ljust(20), end="")
+            else:
+                print("".ljust(20), end="")
+        print("\n")
 
 
 if __name__ == "__main__":

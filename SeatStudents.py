@@ -5,8 +5,7 @@ Devd as a gift for Mrs. Donaldson
 
 2023
 """
-
-
+import math
 
 import numpy as np
 import itertools
@@ -84,36 +83,31 @@ class SeatStudents:
         else:
             return 1
 
-    def visualize_seating_arrangement(self, seating_arrangement):
-        n = len(seating_arrangement)
-        angle = 2 * np.pi / n
+    def visualize_seating_arrangement(self, seating_arrangement, num_rows, num_cols):
+        # Calculate size of each cell
+        cell_size = 10
+        padding = 2
+        total_width = num_cols * (cell_size + padding) + padding
+        total_height = num_rows * (cell_size + padding) + padding
 
-        # start grph
-        fig, ax = plt.subplots(figsize=(8, 8))
-        ax.set_xlim(-1.5, 1.5)
-        ax.set_ylim(-1.5, 1.5)
-        ax.set_aspect("equal")
-        ax.axis("off")
+        # Initialize seating grid
+        seating_grid = [[' ' for _ in range(num_cols)] for _ in range(num_rows)]
 
-        # plot nodes n labels
-        for i, student_id in enumerate(seating_arrangement):
-            x = np.cos(i * angle)
-            y = np.sin(i * angle)
-            ax.plot(x, y, marker="o", markersize=20, color="lightblue")
-            ax.text(x, y, str(student_id), fontsize=12, ha="center", va="center", fontweight="bold")
+        # Populate seating grid with student names
+        for i, student in enumerate(seating_arrangement):
+            row = i // num_cols
+            col = i % num_cols
+            seating_grid[row][col] = student['name']
 
-        # plot arrows
-        for i, student_id in enumerate(seating_arrangement):
-            start_x, start_y = np.cos(i * angle), np.sin(i * angle)
-            end_x, end_y = np.cos((i + 1) % n * angle), np.sin((i + 1) % n * angle)
-            ax.annotate("", xy=(end_x, end_y), xycoords="data", xytext=(start_x, start_y), textcoords="data",
-                        arrowprops=dict(arrowstyle="->", lw=1, color="black"))
+        # Print seating arrangement
+        print('+' + '-' * total_width + '+')
+        for row in seating_grid:
+            print('|', end='')
+            for name in row:
+                print(f'{name:^{cell_size}}|', end='')
+            print('\n+' + '-' * total_width + '+')
 
-        plt.title("Seating Arrangement")
-        plt.show()
-
-
-    def optimize_seating_arrangement(self, iterations=1000, num_trials=10):
+    def optimize_seating_arrangement(self, iterations=1, num_trials=1):
         best_seating_arrangement = None
         best_score = -1
 
@@ -128,7 +122,7 @@ class SeatStudents:
                 best_score = trial_scores[max_index]
                 best_seating_arrangement = trial_seating_arrangements[max_index]
 
-        return best_seating_arrangement
+        return [self.student_data[student_id]['name'] for student_id in best_seating_arrangement]
 
     def personalized_compatibility_score(self, student_id, other_student_id):
         pair_features = self.extract_features((self.student_data[student_id], self.student_data[other_student_id]))
@@ -176,11 +170,10 @@ if __name__ == "__main__":
     seat_students = SeatStudents(student_data)
 
     # what you may want to tweak, lower epochs quicker runtime
-    seat_students.train_personalized_compatibility_models(epochs=100, batch_size=32)
+    seat_students.train_personalized_compatibility_models(epochs=5, batch_size=32)
 
-    # also lower iterations and numtrials this is 1000 iterations with 10 trials each and this will take a long time
-    optimal_seating_arrangement = seat_students.optimize_seating_arrangement(iterations=1000, num_trials=10)
+    optimal_seating_arrangement = seat_students.optimize_seating_arrangement(iterations=5, num_trials=1)
     print("Optimal seating arrangement:", optimal_seating_arrangement)
 
-    # may want to tweak visualization in future TODO -> Thinking file export
     seat_students.visualize_seating_arrangement(optimal_seating_arrangement)
+    print("Done")
