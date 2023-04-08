@@ -1,4 +1,4 @@
-# Machine Learning Seating Arrangement
+2222# Machine Learning Seating Arrangement
 
 This project aims to optimize the seating arrangement of students in a classroom using machine learning. It takes into account student preferences, academic performance, and other relevant features to generate a personalized seating arrangement that maximizes overall compatibility.
 
@@ -6,6 +6,8 @@ This project aims to optimize the seating arrangement of students in a classroom
 P.S. 
 
 may want to tweak epoch count lower // group students instead of training a nn for each. Can take a long time to run depending on # of students. 
+Stronger vs Weaker for speed vs complexity of chart
+
 
 I also feel this could be done in 20 lines using GPT-4 API - May build just for fun
 
