@@ -1,4 +1,4 @@
-2222# Machine Learning Seating Arrangement
+# Machine Learning Seating Arrangement
 
 This project aims to optimize the seating arrangement of students in a classroom using machine learning. It takes into account student preferences, academic performance, and other relevant features to generate a personalized seating arrangement that maximizes overall compatibility.
 
